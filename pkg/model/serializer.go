@@ -557,7 +557,7 @@ func (s *SyncFolder) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	return fmt.Errorf("each element in the 'sync' field must follow the syntax 'localPath:remotePath'")
+	return fmt.Errorf("each element in the 'sync' field must follow the syntax 'localPath:remotePath' or 'localPath:remotePath:syncType'")
 }
 
 func isFolderType(foldertype string) bool {
