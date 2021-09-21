@@ -520,18 +520,49 @@ func (s *SyncFolder) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			return err
 		}
 		s.RemotePath = parts[1]
+		s.Type = SendReceive
 		return nil
 	} else if len(parts) == 3 {
+		if isFolderType(parts[2]) {
+			s.LocalPath, err = ExpandEnv(parts[0])
+			if err != nil {
+				return err
+			}
+			s.RemotePath = parts[1]
+			if !isFolderType(parts[2]) {
+				return fmt.Errorf("'%s' mode is not supported for syncthing folder", parts[2])
+			}
+			s.Type = SyncthingFolderType(parts[2])
+		} else {
+			windowsPath := fmt.Sprintf("%s:%s", parts[0], parts[1])
+			s.LocalPath, err = ExpandEnv(windowsPath)
+			if err != nil {
+				return err
+			}
+			s.RemotePath = parts[2]
+			s.Type = SendReceive
+		}
+		return nil
+	} else if len(parts) == 4 {
 		windowsPath := fmt.Sprintf("%s:%s", parts[0], parts[1])
 		s.LocalPath, err = ExpandEnv(windowsPath)
 		if err != nil {
 			return err
 		}
 		s.RemotePath = parts[2]
+		if !isFolderType(parts[3]) {
+			return fmt.Errorf("'%s' mode is not supported for syncthing folder", parts[2])
+		}
+		s.Type = SyncthingFolderType(parts[3])
 		return nil
 	}
 
 	return fmt.Errorf("each element in the 'sync' field must follow the syntax 'localPath:remotePath'")
+}
+
+func isFolderType(foldertype string) bool {
+	syncthingFolderMode := SyncthingFolderType(foldertype)
+	return SendReceive == syncthingFolderMode || SendOnly == syncthingFolderMode || ReceiveOnly == syncthingFolderMode
 }
 
 // MarshalYAML Implements the marshaler interface of the yaml pkg.

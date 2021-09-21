@@ -106,6 +106,7 @@ type Folder struct {
 	RemotePath  string `yaml:"remotePath"`
 	Retries     int    `yaml:"-"`
 	Overwritten bool   `yaml:"-"`
+	Mode        string `yaml:"mode"`
 }
 
 // Status represents the status of a syncthing folder.
@@ -226,6 +227,7 @@ func New(dev *model.Dev) (*Syncthing, error) {
 					Name:       strconv.Itoa(index),
 					LocalPath:  sync.LocalPath,
 					RemotePath: sync.RemotePath,
+					Mode:       string(sync.Type),
 				},
 			)
 			index++
