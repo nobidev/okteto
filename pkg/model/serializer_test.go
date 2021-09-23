@@ -931,8 +931,8 @@ func TestSyncFoldersUnmashalling(t *testing.T) {
 	}{
 		{
 			name:     "windows test with mode",
-			data:     []byte(`C:/Users/src/test:/usr/src/app:receiveonly`),
-			expected: SyncFolder{LocalPath: "C:/Users/src/test", RemotePath: "/usr/src/app", Type: ReceiveOnly},
+			data:     []byte(`C:/Users/src/test:/usr/src/app:sendonly`),
+			expected: SyncFolder{LocalPath: "C:/Users/src/test", RemotePath: "/usr/src/app", Type: SendOnly},
 		},
 		{
 			name:     "same dir",
@@ -941,8 +941,8 @@ func TestSyncFoldersUnmashalling(t *testing.T) {
 		},
 		{
 			name:     "same dir with mode",
-			data:     []byte(`.:/usr/src/app:receiveonly`),
-			expected: SyncFolder{LocalPath: ".", RemotePath: "/usr/src/app", Type: ReceiveOnly},
+			data:     []byte(`.:/usr/src/app:sendonly`),
+			expected: SyncFolder{LocalPath: ".", RemotePath: "/usr/src/app", Type: SendOnly},
 		},
 		{
 			name:     "previous dir",
@@ -951,8 +951,8 @@ func TestSyncFoldersUnmashalling(t *testing.T) {
 		},
 		{
 			name:     "previous dir with mode",
-			data:     []byte(`../:/usr/src/app:receiveonly`),
-			expected: SyncFolder{LocalPath: "../", RemotePath: "/usr/src/app", Type: ReceiveOnly},
+			data:     []byte(`../:/usr/src/app:sendonly`),
+			expected: SyncFolder{LocalPath: "../", RemotePath: "/usr/src/app", Type: SendOnly},
 		},
 		{
 			name:     "fullpath",
@@ -961,8 +961,8 @@ func TestSyncFoldersUnmashalling(t *testing.T) {
 		},
 		{
 			name:     "fullpath with mode",
-			data:     []byte(`/usr/src/app:/usr/src/app:receiveonly`),
-			expected: SyncFolder{LocalPath: "/usr/src/app", RemotePath: "/usr/src/app", Type: ReceiveOnly},
+			data:     []byte(`/usr/src/app:/usr/src/app:sendonly`),
+			expected: SyncFolder{LocalPath: "/usr/src/app", RemotePath: "/usr/src/app", Type: SendOnly},
 		},
 		{
 			name:     "windows test",

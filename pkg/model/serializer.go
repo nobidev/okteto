@@ -562,7 +562,7 @@ func (s *SyncFolder) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 func isFolderType(foldertype string) bool {
 	syncthingFolderMode := SyncthingFolderType(foldertype)
-	return SendReceive == syncthingFolderMode || SendOnly == syncthingFolderMode || ReceiveOnly == syncthingFolderMode
+	return SendReceive == syncthingFolderMode || SendOnly == syncthingFolderMode
 }
 
 // MarshalYAML Implements the marshaler interface of the yaml pkg.

@@ -242,7 +242,7 @@ func (s *Syncthing) initConfig() error {
 		return fmt.Errorf("failed to create %s: %s", s.Home, err)
 	}
 
-	if err := s.UpdateConfig(); err != nil {
+	if err := s.setFoldersTypeToSendOnly(); err != nil {
 		return err
 	}
 
@@ -254,6 +254,20 @@ func (s *Syncthing) initConfig() error {
 		return fmt.Errorf("failed to write syncthing key: %w", err)
 	}
 
+	return nil
+}
+
+func (s *Syncthing) setFoldersTypeToSendOnly() error {
+	originalFolders := s.GetFolderCopy()
+	for _, folder := range s.Folders {
+		folder.Mode = string(model.SendOnly)
+	}
+
+	if err := s.UpdateConfig(); err != nil {
+		return err
+	}
+
+	s.SetFolders(originalFolders)
 	return nil
 }
 
@@ -832,4 +846,22 @@ func getInfoFile(namespace, name string) string {
 // GetLogFile returns the path to the syncthing log file
 func GetLogFile(namespace, name string) string {
 	return filepath.Join(config.GetDeploymentHome(namespace, name), "syncthing.log")
+}
+
+func (s *Syncthing) GetFolderCopy() []Folder {
+	cpy := make([]Folder, 0)
+	for _, folder := range s.Folders {
+		cpy = append(cpy, *folder)
+	}
+	return cpy
+}
+
+func (s *Syncthing) SetFolders(folders []Folder) {
+	ogFolders := make([]*Folder, 0)
+	for _, folder := range folders {
+		f := Folder(folder)
+		ogFolders = append(ogFolders, &f)
+	}
+	s.Folders = ogFolders
+
 }

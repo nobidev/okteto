@@ -17,6 +17,7 @@ import (
 	"bytes"
 	"html/template"
 
+	"github.com/okteto/okteto/pkg/model"
 	"github.com/okteto/okteto/pkg/syncthing"
 )
 
@@ -101,10 +102,23 @@ const configXML = `<configuration version="32">
 </configuration>`
 
 func getConfigXML(s *syncthing.Syncthing) ([]byte, error) {
+	originalFolders := s.GetFolderCopy()
+	setRemoteFoldersType(s.Folders)
+
 	configTemplate := template.Must(template.New("syncthingConfig").Parse(configXML))
 	buf := new(bytes.Buffer)
 	if err := configTemplate.Execute(buf, s); err != nil {
 		return nil, err
 	}
+
+	s.SetFolders(originalFolders)
 	return buf.Bytes(), nil
+}
+
+func setRemoteFoldersType(folders []*syncthing.Folder) {
+	for _, folder := range folders {
+		if folder.Mode == string(model.SendOnly) {
+			folder.Mode = string(model.ReceiveOnly)
+		}
+	}
 }

@@ -157,6 +157,7 @@ type SyncFolder struct {
 	Type       SyncthingFolderType
 }
 
+// SyncthingFolderType represents a sync folder type
 type SyncthingFolderType string
 
 const (
